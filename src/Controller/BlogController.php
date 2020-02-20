@@ -22,6 +22,10 @@ class BlogController extends AbstractController
         $postsRepository = $doctrine->getRepository(Post::class);
         $post = $postsRepository->find($id);
 
+        if (!$post) {
+            throw $this->createNotFoundException('Pas d\'article trouvé pour l\'id '.$id);            
+        }
+
         return $this->render('post.html.twig', ['post' => $post]);
     }     
 }
