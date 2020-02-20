@@ -6,6 +6,7 @@ use App\Entity\Post;
 use App\Entity\Category;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
+use App\DataFixtures\CommentFixtures;
 
 class PostFixtures extends Fixture
 {
@@ -27,6 +28,8 @@ class PostFixtures extends Fixture
         $post->setContent('Content 1');
         $post->setCreated(new \DateTime('2011-01-01T15:03:01'));
         $post->setCategory($category1);
+        $post->addComment($this->getReference(CommentFixtures::COMMENT_1));
+        $post->addComment($this->getReference(CommentFixtures::COMMENT_2));
         $manager->persist($post);
         
         // Définition d'un nouveau post
