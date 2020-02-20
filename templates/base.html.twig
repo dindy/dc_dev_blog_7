@@ -7,6 +7,9 @@
     </head>
     <body>
     <a href="{{ path('home') }}">Accueil</a>
+        {% block menu %}
+            {{ include('menu_by_category.html.twig', { 'categories': categories }) }}
+        {% endblock %}
         {% block body %}{% endblock %}
         {% block javascripts %}{% endblock %}
     </body>
