@@ -5,3 +5,7 @@ home:
 post:
   path: /post/{id}
   controller: App\Controller\BlogController::post
+
+category:
+  path: /category/{id}
+  controller: App\Controller\BlogController::category

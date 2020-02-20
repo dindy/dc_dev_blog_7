@@ -6,40 +6,50 @@ use App\Entity\Post;
 use App\Entity\Category;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Doctrine\ORM\EntityManagerInterface;
 
 class BlogController extends AbstractController
 {
+    public function __construct(EntityManagerInterface $entityManager) 
+    {
+        $this->postsRepo = $entityManager->getRepository(Post::class);
+        $this->categoriesRepo = $entityManager->getRepository(Category::class);
+        $this->categories = $this->categoriesRepo->findAll();
+    } 
+
     public function home()
     {
-        $doctrine = $this->getDoctrine();
-        $postsRepository = $doctrine->getRepository(Post::class);
-        $posts = $postsRepository->findAll();
-        
-        $categoriesRepository = $doctrine->getRepository(Category::class);
-        $categories = $categoriesRepository->findAll();
+        $posts = $this->postsRepo->findAll();
         
         return $this->render('home.html.twig', [
             'posts' => $posts,
-            'categories' => $categories
-            ]);
-        }
+            'categories' => $this->categories
+        ]);
+    }
         
-        public function post($id) 
-        {
-            $doctrine = $this->getDoctrine();
-            $postsRepository = $doctrine->getRepository(Post::class);
-            $post = $postsRepository->find($id);
-            
-            if (!$post) {
-                throw $this->createNotFoundException('Pas d\'article trouvé pour l\'id '.$id);            
-            }
-            
-            $categoriesRepository = $doctrine->getRepository(Category::class);
-            $categories = $categoriesRepository->findAll();
-            
-            return $this->render('post.html.twig', [
-                'post' => $post,
-                'categories' => $categories
-            ]);
+    public function post($id) 
+    {
+        $post = $this->postsRepo->find($id);
+        
+        if (!$post)  
+            throw $this->createNotFoundException('Pas d\'article trouvé pour l\'id '.$id);            
+        
+        return $this->render('post.html.twig', [
+            'post' => $post,
+            'categories' => $this->categories
+        ]);
     }     
+
+    public function category($id) 
+    {
+        $category = $this->categoriesRepo->find($id);
+        
+        if (!$category)  
+            throw $this->createNotFoundException('Pas de catégorie trouvée pour l\'id '.$id);            
+        
+        return $this->render('category.html.twig', [
+            'category' => $category,
+            'categories' => $this->categories
+        ]);        
+    }
 }
