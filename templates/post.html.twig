@@ -6,4 +6,18 @@
     <h1>{{ post.title }}</h1>
     <i>Créé le {{ post.created|date('d/m/Y à H:i:s') }}</i>
     <p>{{ post.content }}</p>
+
+    <div>
+        <h4>Commentaires</h4>
+        {% for comment in post.comments %}
+            <p>{{ comment.pseudo }}</p>    
+            <p>{{ comment.content }}</p>    
+        {% endfor %}
+    </div>
+    <div>
+        <h4>Ajouter un commentaire</h4>
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        {{ form_end(form) }}        
+    </div>
 {% endblock %}
